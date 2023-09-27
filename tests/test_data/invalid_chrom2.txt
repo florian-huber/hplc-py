@@ -1,3 +1,0 @@
-Test chromatogram with no csv
-Metadata line 1
-Metadata line 2
