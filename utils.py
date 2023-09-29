@@ -1,6 +1,7 @@
 import matplotlib
 import seaborn as sns
 
+
 def get_colors(all_palettes=False):
     """
     Generates a dictionary of standard colors and returns a sequential color
@@ -109,7 +110,7 @@ def matplotlib_style(return_colors=True, return_palette=True, **kwargs):
         "axes.labelweight": 700,
         "xaxis.labellocation": "center",
         "yaxis.labellocation": "center",
-        "axes.labelsize": 8,
+        "axes.labelsize": 6,
         "axes.xmargin": 0.03,
         "axes.ymargin": 0.03,
 
@@ -167,4 +168,3 @@ def matplotlib_style(return_colors=True, return_palette=True, **kwargs):
         return out[0]
     else:
         return out
-
