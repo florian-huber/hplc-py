@@ -38,7 +38,7 @@ ax.fill_between(samp['time'], samp['signal'],
 ax.plot(samp['time'], samp['signal'], lw=1, color=cor['blue'])
 ax.set_xlabel('retention time [min]', fontsize=6)
 ax.set_ylabel(r'signal intensity [$\times 10^4$ a.u.]', fontsize=6)
-plt.savefig('./figures/Fig2_compound_overlaps.pdf', bbox_inches='tight')
+plt.savefig('./figures/Fig3_compound_overlaps.pdf', bbox_inches='tight')
 
 # %%
 # Get list of lactose calibration files and instantiate a calibration dataframe
@@ -119,7 +119,7 @@ ax[2].fill_between(buff_chrom.df['time'], buff_chrom.df[buff_chrom.int_col] /
                    1E4, '-', lw=1.5, color=cor['pale_purple'])
 ax[2].plot(buff_chrom.df['time'], buff_chrom.unmixed_chromatograms /
            1E4, '--', color=cor['primary_red'], lw=1.5)
-plt.savefig('./figures/Fig2_cal_curve_panels.pdf', bbox_inches='tight')
+plt.savefig('./figures/Fig3_cal_curve_panels.pdf', bbox_inches='tight')
 # %%
 # Get the peak parameters of the baseline peak
 buffer_df = pd.DataFrame([])
@@ -166,13 +166,6 @@ for f in test_files:
     _ = chrom.fit_peaks(known_peaks=list(constraints.keys()), tolerance=1,
                         integration_window=[12, 16])
     loose_peaks = chrom.map_peaks(mapper, loc_tolerance=0.5)
-
-    # try:
-#    peaks = chrom.map_peaks({'lactose': {'retention_time': 13.66,
-    #  'slope': popt[0], 'intercept': popt[1], 'unit': 'mM'}},
-    # loc_tolerance=0.5)
-    # except:
-    # continue
 
     # Add the known concentration
     constrained_peaks['known_conc'] = c
@@ -229,7 +222,7 @@ ax[1].plot(chrom.df['time'], chrom.unmixed_chromatograms[:, 0],
 ax[1].fill_between(
     chrom.df['time'], chrom.unmixed_chromatograms[:, 0], color=cor['pale_purple'], alpha=0.5, zorder=1000)
 
-plt.savefig('./figures/Fig2_constrained_unconstrained_mixes.pdf',
+plt.savefig('./figures/Fig3_constrained_unconstrained_mixes.pdf',
             bbox_inches='tight')
 # loose = chrom.fit_peaks(known_peaks=list(constraints.keys()))
 # %%
@@ -256,5 +249,5 @@ ax[1].set_yticks([0, 10, 20])
 for a in ax:
     a.plot([0, 10], [0, 10], 'k--', lw=2)
     a.tick_params(labelsize=6)
-plt.savefig('./figures/Fig2_validation.pdf', bbox_inches='tight')
+plt.savefig('./figures/Fig3_validation.pdf', bbox_inches='tight')
 # %%
