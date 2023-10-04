@@ -21,41 +21,44 @@ affiliations:
 date: "04 October 2023"
 bibliography: paper.bib
 ---
-
 # Summary
-High-Performance Liquid Chromatography (HPLC) and Gas Chromatography (GC) are analytical techniques which
-allow for the quantitative characterization of the chemical components of
-mixtures [Figure 1(A)]. Technological advancements in sample preparation and mechanical
-automation have allowed HPLC to become a high-throughput tool [@kaplitz2020; @broeckhoven2019] which poses new
-challenges for reproducible and rapid analysis of the resulting chromatograms.
-Here we present `hplc-py`, a Python package that permits rapid and reliable
-quantitation of component signals within a chromatogram for
-pipelined workflows. This is achieved by a signal detection and quantitation algorithm 
-which i) identifies windows of time which contain peaks and ii) infers the parameters
-of a mixture of amplitude-weighted skew-normal distributions which sum to reconstruct
-the observed signal. This approach is particularly effective at deconvolving
-highly overlapping signals, allowing for precise absolute quantitation of
-chemical constituents with similar chromatographic retention times.
+High-Performance Liquid Chromatography (HPLC) and Gas Chromatography (GC) are
+analytical techniques which allow for the quantitative characterization of the
+chemical components of mixtures [Figure 1(A)]. Technological advancements in
+sample preparation and mechanical automation have allowed HPLC to become a
+high-throughput tool [@kaplitz2020; @broeckhoven2019] which poses new challenges
+for reproducible and rapid analysis of the resulting chromatograms.  Here we
+present `hplc-py`, a Python package that permits rapid and reliable quantitation
+of component signals within a chromatogram for pipelined workflows. This is
+achieved by a signal detection and quantitation algorithm which i) identifies
+windows of time which contain peaks and ii) infers the parameters of a mixture
+of amplitude-weighted skew-normal distributions which sum to reconstruct the
+observed signal. This approach is particularly effective at deconvolving highly
+overlapping signals, allowing for precise absolute quantitation of chemical
+constituents with similar chromatographic retention times.
 
 # Statement of Need 
-Chromatography has become a gold-standard method
-across diverse fields for precise quantitation and separation of chemical
-mixtures. A key objective in the analysis of
-chromatographic data is determining the time-integrated signal of each
-component, a process which becomes challenging when chemically-similar
+Chromatography has become a gold-standard method across diverse fields for
+precise quantitation and separation of chemical mixtures. A key objective in the
+analysis of chromatographic data is determining the time-integrated signal of
+each component, a process which becomes challenging when chemically-similar
 components result in strongly overlapping signals [such as the blue and green
-symbols in Figure 1(B)].  As of this writing, much of the available tools for
+symbols in Figure 1(B)].  As of this writing, many of the available tools for
 signal quantification, such as the open source Python 2.7 software `HappyTools`
-[@jansen2018], Microsoft Excel applications [@cruzvillalon2023], or proprietary solutions such as [Chromeleon by Thermo-Fisher
-](https://www.thermofisher.com/order/catalog/product/CHROMELEON7) and [Empower by Waters](https://www.waters.com/waters/en_US/Empower-3-Chromatography-Data-Software/nav.htm?cid=513188&locale=en_US), rely
-extensively on extensive manual processing of the chromatograms and curation of the 
-resulting quantitative data. Furthermore, we are unaware of any tools that can reliably 
-deconvolve highly overlapping signals. `hplc-py` provides a programmatic interface by which users can quickly and
-reliably quantify components of complex chromatograms in a few lines of code
-[Figure 1(C)]. Importantly, the peak detection and fitting algorithm of `hplc-py`
-is able to deconvolve completely overlapping signals, allowing for the accurate
-quantification of mixtures otherwise not separable without extensive experimental
-optimization. 
+[@jansen2018], Microsoft Excel applications [@cruzvillalon2023], or proprietary
+solutions such as [Chromeleon by Thermo-Fisher
+](https://www.thermofisher.com/order/catalog/product/CHROMELEON7) and [Empower
+by
+Waters](https://www.waters.com/waters/en_US/Empower-3-Chromatography-Data-Software/nav.htm?cid=513188&locale=en_US),
+rely on manual processing of the chromatograms and
+curation of the resulting quantitative data. Furthermore, we are unaware of any
+tools that can reliably deconvolve highly overlapping signals. `hplc-py`
+provides a programmatic interface by which users can quickly and reliably
+quantify components of complex chromatograms in a few lines of code [Figure
+1(C)]. Importantly, the peak detection and fitting algorithm of `hplc-py` is
+able to deconvolve completely overlapping signals, allowing for the accurate
+quantification of mixtures otherwise not separable without extensive
+experimental optimization. 
 
 ![**Chromatographic separation of chemical compounds and their detection with
 `hplc-py`.**  (A) Diagrammatic view of the chromatographic principle. (B) A
@@ -67,11 +70,13 @@ chromatogram. Code used to generate panels (B) and (C) is available on the [GitH
 
 # Methodology 
 The core algorithmic steps employed by `hplc-py` are diagrammed in Figure 2 and 
-presented in detail on the package [documentation](https://cremerlab.github.io/hplc-py). Nearly all functions of `hplc-py` are methods on a base `Chromatogram`
-object [Figure 2(A)]. Once a `Chromatogram` has been instantiated, automated detection and quantification of peaks which compose the observed chromatogram 
-can be executed by calling the `.fit_peaks` method. Under the hood, this method 
-calls three helper functions [diagrammed in Figure 2(B)] which preform the following
-steps:
+presented in detail on the package
+[documentation](https://cremerlab.github.io/hplc-py). Nearly all functions of
+`hplc-py` are methods on a base `Chromatogram` object [Figure 2(A)]. Once a
+`Chromatogram` has been instantiated, automated detection and quantification of
+peaks which compose the observed chromatogram can be executed by calling the
+`.fit_peaks` method. Under the hood, this method calls three helper functions
+[diagrammed in Figure 2(B)] which preform the following steps:
 
 **`i)` Estimation of and correction for a variable baseline.** A common challenge in the analysis of HPLC data is the identification and removal of spurious 
 background signal. While the physicochemical basis for baseline variance is complex [@choikhet2003; @felinger2004], numerous methods have been developed for their correction [@mecozzi2014; @macko2001]. In `hplc-py`, this is implemented using the Sensitive Nonlinear Iterative Peak (SNIP) method originally developed for smoothing 
@@ -122,7 +127,7 @@ HPLC data analysis programs and further experimental optimization would be neede
 to resolve them. 
 
 However, as `hplc-py` fits mixtures of weighted distributions instead 
-of empirical integration of the signal itself, it is possible to quantitatively 
+of empirically summing over the signal itself, it is possible to quantitatively 
 resolve these signals. This can be performed by tightly constraining the
 parameters of one of the two confounding signals, such as phosphate.
 As an example, we have considered a use case where phosphate is present in a fixed 
