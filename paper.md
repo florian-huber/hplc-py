@@ -22,7 +22,7 @@ date: "04 October 2023"
 bibliography: paper.bib
 ---
 # Summary
-High-Performance Liquid Chromatography (HPLC) and Gas Chromatography (GC) are
+High-Performance Liquid Chromatography (HPLC) and Gas Chromatography are
 analytical techniques which allow for the quantitative characterization of the
 chemical components of mixtures [Figure 1(A)]. Technological advancements in
 sample preparation and mechanical automation have allowed HPLC to become a
