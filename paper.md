@@ -8,17 +8,17 @@ tags:
   - Chromatography
 authors:
   - name: Griffin Chure
-    orcid: 0000-0000-0000-0000
+    orcid: 0000-0002-2216-2057 
     affiliation: "1, *"
   - name: Jonas Cremer
-    orcid: 
+    orcid: 0000-0003-2328-5152
     affiliation: 1
 affiliations:
  - name: Department of Biology, Stanford University, CA, USA
    index: 1
  - name: For correspondence, contact `griffinchure@gmail.com`
    index: "*"
-date: "04 October 2023"
+date: "23 January 2024"
 bibliography: paper.bib
 ---
 # Summary
