@@ -66,17 +66,21 @@ simulated chromatogram of the three separated compounds diagrammed in panel A.
 (C) Passing this simulated chromatogram through the methods of the
 `Chromatogram` object of `hplc-py` allows for deconvolution and quantification
 of individual signals which sum to reconstruct the observed
-chromatogram. Code used to generate panels (B) and (C) is available on the [GitHub repository publication branch](https://github.com/cremerlab/hplc-py/blob/publication/Fig1_summary.py)](figures/Figure1.png){label="fig:intro"}
+chromatogram. Code used to generate panels (B) and (C) is available on the [GitHub repository publication branch](https://github.com/cremerlab/hplc-py/blob/publication/Fig1_summary.py)](figures/Figure1.pdf){label="fig:intro"}
 
 # Methodology 
-The core algorithmic steps employed by `hplc-py` are diagrammed in Figure 2 and 
+The major components of `hplc-py` are diagrammed in Figure 2 (A). A helper function,
+`load_chromatogram`, can be used to read a raw text file, filter through the metadata in the 
+header, and retrieve the time and signal data, given user-supplied column names [Figure 2(B)]. 
+The resulting pandas DataFrame object can be passed to the `Chromatogram` object,
+which has a slew of methods for cropping, fitting, scoring, quantifying, and 
+plotting the chromatogram. The core algorithmic steps employed by `hplc-py` are diagrammed in Figure 2(C) and 
 presented in detail on the package
-[documentation](https://cremerlab.github.io/hplc-py). Nearly all functions of
-`hplc-py` are methods on a base `Chromatogram` object [Figure 2(A)]. Once a
+[documentation](https://cremerlab.github.io/hplc-py). Once a
 `Chromatogram` has been instantiated, automated detection and quantification of
 peaks which compose the observed chromatogram can be executed by calling the
 `.fit_peaks` method. Under the hood, this method calls three helper functions
-[diagrammed in Figure 2(B)] which preform the following steps:
+[diagrammed in Figure 2(C)] which preform the following steps:
 
 **`i)` Estimation of and correction for a variable baseline.** A common challenge in the analysis of HPLC data is the identification and removal of spurious 
 background signal. While the physicochemical basis for baseline variance is complex [@choikhet2003; @felinger2004], numerous methods have been developed for their correction [@mecozzi2014; @macko2001]. In `hplc-py`, this is implemented using the Sensitive Nonlinear Iterative Peak (SNIP) method originally developed for smoothing 
@@ -86,7 +90,7 @@ of spectroscopic data [@morhac2008].
 background has been identified and corrected, peak-filled regions of the chromatogram are identified
 through the application of topographic prominence thresholds, a method common in the signal processing 
 of neuron action potentials [@choi2017]. With peak locations identified, the chromatogram 
-is further clipped into windows--regions in time where chemical species co-elute 
+is further clipped into windows--regions in time when chemical species co-elute 
 and therefore overlap.
 
 **`iii)` Fitting a mixture of amplitude-weighted skew-normal distributions to each peak window.** For an assigned peak window with $N$ peaks, `hplc-py` fits a convolution of $N$ amplitude-weighted skew-normal 
@@ -94,26 +98,29 @@ distributions to the observed signal $S$ within that window. A weighted skew-nor
 by an amplitude $A$, location and scale parameters $\tau$ and $\sigma$, and a skew parameter $\alpha$ and has 
 the form 
 $$
-S(t) = \frac{A}{\sqrt{2\pi\sigma^2}}\exp\left[-\frac{(t - \tau)^2}{2\sigma^2}\right]\left[1 + \text{erf}\left(\frac{\alpha(t - \tau)}{\sqrt{2\sigma^2}}\right)\right], \label{eq:skewnorm}
+S(t) = \frac{A}{\sqrt{2\pi\sigma^2}}\exp\left[-\frac{(t - \tau)^2}{2\sigma^2}\right]\left[1 + \text{erf}\left(\frac{\alpha(t - \tau)}{\sqrt{2\sigma^2}}\right)\right], \tag{1}
 $$
 where $t$ is the time point and $\text{erf}$ is the error function. The skew-normal 
 distribution is useful in fitting chromatogram signals as peaks are often asymmetric 
 with high skewness, a property described by a single parameter $\alpha$.
 
-The `.fit_peaks` method returns a Pandas DataFrame [Figure 2(C)] which reports the 
-best-fit values for each parameter for each peak. Importantly, it also returns 
-the integral of Equation 1 for each compound over a given time window which is linearly proportional to the concentration of the analyte [@moosavi2018]. Figure 2(D-E) demonstrates that the
-peak quantification algorithm of `hplc-py` yields a linear relationship between concentration and 
-integrated area for a standard curve of a lactose sugar solution across a decade of concentrations.
+The `.fit_peaks` method returns a Pandas DataFrame [Figure 2(D)] which reports
+the best-fit values for each parameter for each peak. Importantly, it also
+returns the integral of Equation 1 for each compound over a given time window
+which is linearly proportional to the concentration of the analyte
+[@moosavi2018]. Figure 2(E-F) demonstrates that the peak quantification
+algorithm of `hplc-py` yields a linear relationship between concentration and 
+integrated area for a standard curve of a lactose sugar solution across a decade
+of concentrations.
 
 ![**The peak quantification algorithm implemented in `hplc-py` as applied to a 
-real chromatogram.** (A) A `Chromatogram` object 
-is instantiated by loading a raw chromatogram text file as a Pandas DataFrame. (B) 
+real chromatogram.** (A) The `hplc-py` data model. (B) A `Chromatogram` object 
+is instantiated by loading a raw chromatogram text file as a Pandas DataFrame. (C) 
 The peak quantification operations undertaken by the `fit_peaks()` method of a `Chromatogram`
-object. (C) A representative peak quantification table returned by `.fit_peaks()`. 
-(D) Representative signals of a lactose solution with different concentrations. (E)
-A calibration curve generated from panel D using `hplc-py`. Code used to generate
-these figure panels are available on the [GitHub repository publication branch](https://github.com/cremerlab/hplc-py/blob/publication/Fig2_method.py).](figures/Figure2.png){label="fig:method"}
+object. (D) A representative peak quantification table returned by `.fit_peaks()`. 
+(E) Representative signals of a lactose solution with different concentrations. (F)
+A calibration curve generated from panel E using `hplc-py`. Code used to generate
+these figure panels are available on the [GitHub repository publication branch](https://github.com/cremerlab/hplc-py/blob/publication/Fig2_method.py).](figures/Figure2.pdf){label="fig:method"}
 
 # Constraining Peak Parameters and Overlapping Signals
 The separation efficiency of different chemical species through HPLC is dependent
@@ -125,6 +132,7 @@ in a convolution which can be mistaken for a single peak [Figure 3(A, dashed lin
 As a consequence, these signals would be classified as inseparable using other 
 HPLC data analysis programs and further experimental optimization would be needed 
 to resolve them. 
+
 
 However, as `hplc-py` fits mixtures of weighted distributions instead 
 of empirically summing over the signal itself, it is possible to quantitatively 
@@ -151,7 +159,7 @@ lineshape (red) of the phosphate signal (purple) as computed by `hplc-py`. The i
 distributions of lactose (blue) and phosphate (purple) with constrained or unconstrained 
 phosphate parameters in (C) and (D), respectively. Inferred lactose concentration 
 compared to the known concentration in the mixture for the constrained and unconstrained
-phosphate parameters are shown in (E) and (F), respectively. Code used to perform this analysis and generate these figures is available on the [GitHub repository publication branch](https://github.com/cremerlab/hplc-py/blob/publication/Fig3_validation.py)](figures/Figure3.png)
+phosphate parameters are shown in (E) and (F), respectively. Code used to perform this analysis and generate these figures is available on the [GitHub repository publication branch](https://github.com/cremerlab/hplc-py/blob/publication/Fig3_validation.py)](figures/Figure3.pdf)
 
 In total, `hplc-py` provides a programmatic interface that allows experimentalists 
 to rapidly quantify chemical signals from chromatograms, even when there is exceedingly
